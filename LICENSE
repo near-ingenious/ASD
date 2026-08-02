@@ -1,0 +1,47 @@
+MIT License
+
+Copyright (c) 2026 Jarin Alam Prity & Popy Rani Boidya
+Department of Computer Science & Engineering
+Metropolitan University, Sylhet-3104, Bangladesh
+
+Supervised by: Md Mahfujul Hasan, Associate Professor & Head, Dept. of CSE
+Clinical Collaborator: Prof. Imdadul Magfur, Sylhet MAG Osmani Medical College
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+────────────────────────────────────────────────────────────────────────────────
+DATASET NOTICE
+────────────────────────────────────────────────────────────────────────────────
+This software uses the Autism Brain Imaging Data Exchange (ABIDE) datasets.
+ABIDE data are governed by their own data sharing and usage policies:
+
+  ABIDE-I:  http://fcon_1000.projects.nitrc.org/indi/abide/
+  ABIDE-II: http://fcon_1000.projects.nitrc.org/indi/abide/abideII.html
+
+Users must comply with ABIDE data use terms when using this software
+with ABIDE data. The ABIDE data themselves are NOT included in this repository.
+
+────────────────────────────────────────────────────────────────────────────────
+CLINICAL DISCLAIMER
+────────────────────────────────────────────────────────────────────────────────
+This software is intended for RESEARCH PURPOSES ONLY. It is not a medical
+device and has not been approved by any regulatory authority for clinical use.
+The system sensitivity (0.652) does not meet clinical screening thresholds.
+Do not use for autonomous diagnostic decisions. Always consult qualified
+medical professionals for ASD diagnosis and treatment decisions.

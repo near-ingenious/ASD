@@ -1,0 +1,264 @@
+<div align="center">
+
+# 🧠 Robust ASD Diagnosis Under Missing Clinical Modalities
+
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![University](https://img.shields.io/badge/Metropolitan%20University-Sylhet-green.svg)]()
+[![ABIDE](https://img.shields.io/badge/Data-ABIDE%20I%2FII-orange.svg)](http://fcon_1000.projects.nitrc.org/indi/abide/)
+
+**Cross-Modal Representation Reconstruction and Explainable Multimodal Learning**
+
+*A systematic, reproducible, and clinically honest evaluation of ASD diagnosis*
+*under missing modalities — from Metropolitan University, Sylhet, Bangladesh.*
+
+</div>
+
+---
+
+## 👥 Authors & Affiliations
+
+| Role | Name | ID | Email |
+|------|------|----|-------|
+| **Author** | Jarin Alam Prity | 222-115-005 | jarinprity438@gmail.com |
+| **Author** | Popy Rani Boidya | 007 | popyboidya@gmail.com |
+
+**Department:** Computer Science & Engineering  
+**Institution:** Metropolitan University, Sylhet-3104, Bangladesh
+
+---
+
+**Supervisor:**  
+Md Mahfujul Hasan  
+Associate Professor & Head, Department of CSE  
+Metropolitan University, Sylhet  
+✉ mahfujul@metrouni.edu.bd
+
+**Clinical Collaborator:**  
+Prof. Imdadul Magfur  
+Psychiatrist & Psychotherapist, Researcher  
+Sylhet MAG Osmani Medical College & Hospital  
+✉ imdad153153@gmail.com
+
+---
+
+## 📋 Project Overview
+
+> **"Robust Autism Spectrum Disorder Diagnosis Under Missing Clinical Modalities Using
+> Cross-Modal Representation Reconstruction and Explainable Multimodal Learning"**
+
+**Datasets:** ABIDE-I (n=989) · ABIDE-II (n=1,114) · 20 international sites  
+**Tracks:** A (Unimodal) · B (Fusion) · C (Missingness) · D (Explainability) · E (Fairness)
+
+### Key Results
+
+| System | AUC | 95% CI | Comparison |
+|--------|-----|--------|-----------|
+| BrainGNN — fMRI only | 0.731 | [0.698–0.761] | Unimodal baseline |
+| **LF Stacked — fMRI+IQ** | **0.763** | **[0.734–0.792]** | **+0.032 (p<0.001)** |
+| fMRI absent (S4) | 0.638 | — | 91.4% retained ✓ |
+| VAE + 30% random miss | 0.723 | — | +0.081 vs Zero (p<0.001) |
+
+### Hypothesis Outcomes
+
+| # | Hypothesis | Result |
+|---|-----------|--------|
+| H1 | VAE > conventional imputation | ⚡ **Partial** — random dropout only |
+| H2 | Performance maintained under missingness | ⚡ **Partial** — single modality |
+| H3 | Cross-modal attention > late fusion | ❌ **Rejected** — honest negative |
+| H4 | Graceful degradation | ⚡ **Partial** — single mod. ≥91% |
+| H5 | Sex-aware modelling improves fairness | ❌ **Rejected** — data bottleneck |
+
+---
+
+## 🗂️ Repository Structure
+
+```
+asd-missing-modalities/
+├── src/asd_multimodal/          # Core Python library
+│   ├── data/
+│   │   ├── abide_loader.py      # ABIDE-I/II loading (with QC fixes)
+│   │   └── preprocessing.py     # ComBat-GAM, PCA, imputation pipeline
+│   ├── models/
+│   │   ├── unimodal.py          # RF, XGB, LGB, MLP, TabTransformer, BrainGNN
+│   │   ├── fusion.py            # LF Stacked, CMA, Early Fusion, SDAE
+│   │   └── reconstruction.py    # β-VAE, MAE reconstructors
+│   ├── training/
+│   │   ├── cv_engine.py         # Stratified CV + bootstrap CIs
+│   │   └── missing_modality.py  # 8 scenarios × 7 strategies (Track C)
+│   ├── explainability/
+│   │   └── shap_analysis.py     # SHAP, PI, IG, PC back-projection
+│   ├── fairness/
+│   │   └── sex_stratified.py    # E1–E4 fairness interventions
+│   └── utils/
+│       └── metrics.py           # AUC, BAC, ECE, bootstrap, statistical tests
+├── experiments/
+│   ├── track_a_unimodal.py      # Track A runner
+│   ├── track_b_fusion.py        # Track B runner
+│   ├── track_c_missing.py       # Track C runner
+│   ├── track_d_explain.py       # Track D runner
+│   └── track_e_fairness.py      # Track E runner
+├── configs/
+│   └── default_config.yaml      # All hyperparameters
+├── scripts/
+│   ├── download_abide.sh        # ABIDE download guide
+│   └── run_all_experiments.sh   # Full pipeline
+├── tests/                       # pytest unit tests (33 tests)
+├── notebooks/                   # Exploratory analysis
+├── docs/                        # Extended documentation
+└── results/                     # Output directory (git-ignored)
+```
+
+---
+
+## ⚡ Quick Start
+
+```bash
+# 1. Clone
+git clone https://github.com/YOUR_USERNAME/asd-missing-modalities.git
+cd asd-missing-modalities
+
+# 2. Install
+pip install -e ".[dev]"
+
+# 3. Set up data (see scripts/download_abide.sh)
+mkdir -p data/raw data/processed
+
+# 4. Run data quality audit
+python experiments/track_a_unimodal.py --audit-only
+
+# 5. Run full pipeline
+bash scripts/run_all_experiments.sh
+```
+
+---
+
+## 📦 Data Setup
+
+```
+data/
+├── raw/
+│   ├── Phenotypic_V1_0b.csv              # ABIDE-I phenotypic
+│   ├── ABIDEII_Composite_Phenotypic.csv  # ABIDE-II phenotypic (latin1 encoding)
+│   ├── CC400_ROI_labels.csv
+│   └── abide_rois_cc200/                 # CC200 .1D ROI time-series files
+└── processed/                            # Auto-generated by pipeline
+    ├── connectivity_matrix.npy           # (989, 19900) Fisher-z FC
+    ├── connectivity_metadata.csv
+    └── X_fmri_pca100.npy
+```
+
+**Download ABIDE:** [http://fcon_1000.projects.nitrc.org/indi/abide/](http://fcon_1000.projects.nitrc.org/indi/abide/)
+
+---
+
+## 🧪 Individual Track Usage
+
+```bash
+# Track A: Unimodal baselines
+python experiments/track_a_unimodal.py --modality fmri --n-splits 10
+
+# Track B: Multimodal fusion
+python experiments/track_b_fusion.py --seed 42
+
+# Track C: Missing-modality robustness
+python experiments/track_c_missing.py --scenarios S4_fMRI S7_Rand30 --strategies VAE Zero Mean
+
+# Track D: Explainability
+python experiments/track_d_explain.py --fmri-pca 100
+
+# Track E: Fairness
+python experiments/track_e_fairness.py
+```
+
+---
+
+## 🧪 Running Tests
+
+```bash
+pip install pytest
+pytest tests/ -v
+# Expected: 33 tests passed
+```
+
+---
+
+## 📊 Reproducing Key Results
+
+```python
+import numpy as np
+from asd_multimodal.models.fusion import LateFusionStacked
+from asd_multimodal.training.cv_engine import run_multimodal_cv
+
+X_fmri  = np.load("data/processed/X_fmri_pca100.npy")
+X_pheno = np.load("data/processed/X_pheno.npy")
+X_demo  = np.load("data/processed/X_demo.npy")
+y       = np.load("data/processed/y.npy")
+
+results = run_multimodal_cv(
+    model_fn = lambda: LateFusionStacked(seed=42),
+    X_fmri   = X_fmri,
+    X_pheno  = X_pheno,
+    X_demo   = X_demo,
+    y        = y,
+    n_splits = 10,
+    seed     = 42,
+)
+print(f"AUC: {results['overall']['AUC']:.3f}")
+# Expected: AUC: 0.763
+```
+
+---
+
+## 📊 Seven Data Quality Issues Documented
+
+| # | Issue | Severity | Fix |
+|---|-------|----------|-----|
+| 1 | ABIDE-II latin1 encoding + trailing whitespace in column names | HIGH | `encoding='latin1'`, `.strip()` |
+| 2 | ASD head motion > TDC (p<0.001) | HIGH | Include FD as ComBat covariate |
+| 3 | ADOS/ADI-R MNAR (given to ASD only) | HIGH | Presence flags; exclude from fusion |
+| 4 | Female ASD n=62 training (critical) | HIGH | All female results = EXPLORATORY |
+| 5 | Site imbalance (NYU=17.7%) | MEDIUM | ComBat-GAM harmonisation |
+| 6 | ABIDE-II: zero fMRI data | HIGH | External fMRI validation impossible |
+| 7 | SCQ/AQ/Vineland >88% missing | MEDIUM | Excluded from analysis |
+
+---
+
+## ⚠️ Clinical Disclaimer
+
+> Sensitivity = 0.652 is **below clinical screening threshold** (≥0.80).
+> This is a **research decision-support tool only** — not a diagnostic replacement.
+> **Contraindicated for female patients** (FNR=0.500) and children <12 years.
+
+---
+
+## 📚 Citation
+
+```bibtex
+@article{prity2026robust,
+  title     = {Robust Autism Spectrum Disorder Diagnosis Under Missing Clinical
+               Modalities Using Cross-Modal Representation Reconstruction and
+               Explainable Multimodal Learning},
+  author    = {Prity, Jarin Alam and Boidya, Popy Rani},
+  journal   = {IEEE Transactions on Medical Imaging},
+  year      = {2026},
+  note      = {Under review. Supervisor: Md Mahfujul Hasan.
+               Clinical collaborator: Prof. Imdadul Magfur.
+               Metropolitan University, Sylhet, Bangladesh.}
+}
+```
+
+---
+
+## 📄 License
+
+MIT License — see [LICENSE](LICENSE).  
+ABIDE data governed by its own data sharing agreement.
+
+---
+
+<div align="center">
+<b>Metropolitan University · Department of CSE · Sylhet-3104 · Bangladesh</b><br>
+<i>Supervised by Md Mahfujul Hasan · Clinical collaboration: Prof. Imdadul Magfur</i><br><br>
+<i>"Scientific honesty over performance inflation. Negative findings are findings too."</i>
+</div>

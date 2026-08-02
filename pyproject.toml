@@ -1,0 +1,60 @@
+[build-system]
+requires = ["setuptools>=65", "wheel"]
+build-backend = "setuptools.backends.legacy:build"
+
+[project]
+name = "asd-multimodal"
+version = "1.0.0"
+description = "Robust ASD Diagnosis Under Missing Clinical Modalities"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.10"
+
+authors = [
+  { name = "Jarin Alam Prity",  email = "jarinprity438@gmail.com" },
+  { name = "Popy Rani Boidya",  email = "popyboidya@gmail.com" },
+]
+
+keywords = ["autism","ASD","fMRI","multimodal","missing-data","explainability","fairness","ABIDE"]
+
+classifiers = [
+  "Development Status :: 4 - Beta",
+  "Intended Audience :: Science/Research",
+  "Topic :: Scientific/Engineering :: Medical Science Apps.",
+  "License :: OSI Approved :: MIT License",
+  "Programming Language :: Python :: 3.10",
+]
+
+dependencies = [
+  "numpy>=1.24",
+  "pandas>=2.0",
+  "scipy>=1.10",
+  "scikit-learn>=1.3",
+  "torch>=2.0",
+  "xgboost>=1.7",
+  "lightgbm>=4.0",
+  "shap>=0.42",
+  "matplotlib>=3.7",
+  "seaborn>=0.12",
+  "pyyaml>=6.0",
+  "tqdm>=4.65",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=7.0","pytest-cov>=4.0","black>=23.0","isort>=5.12","flake8>=6.0","jupyter>=1.0"]
+harmonise = ["neuroHarmonize>=2.3"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts   = "-v --tb=short"
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.isort]
+profile = "black"
+line_length = 100
