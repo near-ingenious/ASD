@@ -21,7 +21,7 @@
 | Role | Name | ID | Email |
 |------|------|----|-------|
 | **Author** | Jarin Alam Prity | 222-115-005 | jarinprity438@gmail.com |
-| **Author** | Popy Rani Boidya | 007 | popyboidya@gmail.com |
+| **Author** | Popy Rani Boidya | 222-115-007 | popyboidya@gmail.com |
 
 **Department:** Computer Science & Engineering  
 **Institution:** Metropolitan University, Sylhet-3104, Bangladesh
