@@ -1,0 +1,214 @@
+# configs/default_config.yaml
+# Robust ASD Diagnosis Under Missing Clinical Modalities
+# Metropolitan University, Sylhet-3104, Bangladesh
+# Authors: Jarin Alam Prity (222-115-005) & Popy Rani Boidya (007)
+# Supervisor: Md Mahfujul Hasan | Clinical: Prof. Imdadul Magfur
+
+project:
+  name: "asd-missing-modalities"
+  version: "1.0.0"
+  seed: 42
+
+# ── Data paths ────────────────────────────────────────────────────────────────
+data:
+  raw_dir:    "data/raw"
+  processed_dir: "data/processed"
+
+  # ABIDE-I
+  abide1_pheno:     "data/raw/Phenotypic_V1_0b.csv"
+  abide1_prep:      "data/raw/Phenotypic_V1_0b_preprocessed1.csv"
+  roi_dir:          "data/raw/abide_rois_cc200"     # .1D files
+
+  # ABIDE-II  (CRITICAL: encoding=latin1, strip column names)
+  abide2_pheno:     "data/raw/ABIDEII_Composite_Phenotypic.csv"
+  abide2_encoding:  "latin1"
+
+  # Pre-computed connectivity matrix (run scripts/compute_connectivity.py first)
+  connectivity_matrix:   "data/processed/connectivity_matrix.npy"
+  connectivity_metadata: "data/processed/connectivity_metadata.csv"
+
+  # Atlas
+  cc400_labels: "data/raw/CC400_ROI_labels.csv"
+  atlas_nii:    "data/raw/cc400_roi_atlas_nii.gz"
+
+# ── Results ───────────────────────────────────────────────────────────────────
+results:
+  base_dir: "results"
+  track_a:  "results/track_a"
+  track_b:  "results/track_b"
+  track_c:  "results/track_c"
+  track_d:  "results/track_d"
+  track_e:  "results/track_e"
+  figures:  "results/figures"
+
+# ── Preprocessing ─────────────────────────────────────────────────────────────
+preprocessing:
+  fmri_pca:        100        # PCA components (64.1% variance explained)
+  impute_fmri:     "mean"     # Within-fold fMRI imputation
+  impute_pheno:    "median"   # FIQ/VIQ/PIQ: median (MAR)
+  impute_demo:     "median"
+  impute_behav:    "zero"     # Behavioural: zero-fill (MNAR-aware)
+  scale:           true
+
+  # ComBat-GAM harmonisation
+  combat:
+    enabled:     true
+    backend:     "fallback"  # "neuroharmonize" if package installed
+    covariates:  ["DX_GROUP", "AGE_AT_SCAN", "SEX", "func_mean_fd"]
+    within_fold: true        # Fit on training fold only (prevents leakage)
+
+  # Quality control thresholds
+  qc:
+    min_timepoints:  78
+    max_mean_fd:     0.5     # mm (exclude subjects above this)
+    zero_var_thresh: 1.0e-10
+
+# ── Cross-validation ─────────────────────────────────────────────────────────
+cv:
+  n_splits_classical: 10
+  n_splits_neural:    5
+  n_boot:             1000   # Bootstrap resamples for CIs
+  n_boot_neural:      300    # Reduced for neural models
+  seed:               42
+  test_size_track_c:  0.20   # Track C uses single split
+
+# ── Model hyperparameters ─────────────────────────────────────────────────────
+models:
+  random_forest:
+    n_estimators:   500
+    max_features:   "sqrt"
+    class_weight:   "balanced"
+    n_jobs:         -1
+
+  xgboost:
+    n_estimators:   300
+    max_depth:      4
+    learning_rate:  0.05
+    subsample:      0.8
+    colsample_bytree: 0.8
+    gamma:          1
+    eval_metric:    "auc"
+
+  lightgbm:
+    n_estimators:   300
+    max_depth:      4
+    learning_rate:  0.05
+    subsample:      0.8
+    colsample_bytree: 0.8
+    min_child_samples: 10
+    class_weight:   "balanced"
+    verbose:        -1
+
+  mlp:
+    hidden_layer_sizes: [256, 128, 64]
+    activation:         "relu"
+    learning_rate_init: 0.001
+    max_iter:           300
+    early_stopping:     true
+    validation_fraction: 0.1
+    n_iter_no_change:   15
+    alpha:              0.0001
+
+  tab_transformer:
+    d_model:    64
+    n_heads:    4
+    n_layers:   2
+    dropout:    0.2
+    epochs:     50
+    lr:         0.0003
+    batch_size: 64
+
+  brain_gnn:
+    hidden:     128
+    dropout:    0.35
+    epochs:     50
+    lr:         0.0003
+    batch_size: 64
+
+  graph_transformer:
+    d_model:    64
+    n_heads:    4
+    dropout:    0.2
+    epochs:     50
+    lr:         0.0003
+
+# ── Fusion models ─────────────────────────────────────────────────────────────
+fusion:
+  lf_stacked:
+    n_estimators_fmri:  200
+    n_estimators_pheno: 100
+    meta_C:             1.0
+    cv_meta:            3
+
+  cma:
+    d_model:    64
+    n_heads:    4
+    dropout:    0.2
+    epochs:     60
+    lr:         0.0003
+
+  sdae:
+    latent_dim:  64
+    noise_std:   0.1
+    dropout:     0.3
+    epochs:      60
+
+# ── Missing-modality (Track C) ────────────────────────────────────────────────
+missing_modality:
+  scenarios:    null    # null = all 8 scenarios
+  strategies:   null    # null = all 7 strategies
+
+  # VAE reconstruction
+  vae:
+    train:        true
+    latent_dim:   48
+    beta:         0.5
+    hidden:       128
+    epochs:       80
+    lr:           0.001
+
+  # MAE reconstruction
+  mae:
+    train:        false   # Expensive; set true for full reproduction
+    hidden:       256
+    latent_dim:   64
+    mask_ratio:   0.30
+    epochs:       80
+    lr:           0.001
+
+# ── Explainability (Track D) ──────────────────────────────────────────────────
+explainability:
+  shap_samples:  80      # Subjects for SHAP computation
+  pi_repeats:    15      # Permutation importance repeats
+  ig_samples:    50      # Subjects for Integrated Gradients
+  ig_steps:      30      # Interpolation steps for IG
+
+# ── Fairness (Track E) ───────────────────────────────────────────────────────
+fairness:
+  e3_female_asd_weight: 3.0   # Cost-sensitive weight for female ASD
+  min_female_n_warn:    30    # Warn if female test n < this
+  exploratory_threshold: 30   # Mark results exploratory below this
+
+# ── Statistical analysis ──────────────────────────────────────────────────────
+statistics:
+  alpha:              0.05
+  n_bootstrap:        1000
+  n_bootstrap_perm:   1000
+  bonferroni_correct: false   # Pre-registered hypotheses; correction in supplementary
+  note: >
+    Bootstrap permutation AUC comparison used throughout
+    (NOT DeLong — OOF arrays from different CV fold orderings
+    prevent valid paired DeLong computation).
+
+# ── Clinical validation ───────────────────────────────────────────────────────
+clinical:
+  collaborator:
+    name:        "Prof. Imdadul Magfur"
+    title:       "Psychiatrist & Psychotherapist, Researcher"
+    institution: "Sylhet MAG Osmani Medical College & Hospital"
+    email:       "imdad153153@gmail.com"
+  screening_sensitivity_target: 0.80
+  disclaimer: >
+    This system (Sensitivity=0.652) does not meet clinical screening thresholds.
+    Positioned as research decision-support only. Contraindicated for female
+    patients (FNR=0.500) and children <12 years.
