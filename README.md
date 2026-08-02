@@ -232,21 +232,6 @@ print(f"AUC: {results['overall']['AUC']:.3f}")
 
 ---
 
-## 📚 Citation
-
-```bibtex
-@article{prity2026robust,
-  title     = {Robust Autism Spectrum Disorder Diagnosis Under Missing Clinical
-               Modalities Using Cross-Modal Representation Reconstruction and
-               Explainable Multimodal Learning},
-  author    = {Prity, Jarin Alam and Boidya, Popy Rani},
-  journal   = {IEEE Transactions on Medical Imaging},
-  year      = {2026},
-  note      = {Under review. Supervisor: Md Mahfujul Hasan.
-               Clinical collaborator: Prof. Imdadul Magfur.
-               Metropolitan University, Sylhet, Bangladesh.}
-}
-```
 
 ---
 
@@ -259,6 +244,6 @@ ABIDE data governed by its own data sharing agreement.
 
 <div align="center">
 <b>Metropolitan University · Department of CSE · Sylhet-3104 · Bangladesh</b><br>
-<i>Supervised by Md Mahfujul Hasan · Clinical collaboration: Prof. Imdadul Magfur</i><br><br>
+<i>Supervised by Md Mahfujul Hasan</i><br><br>
 <i>"Scientific honesty over performance inflation. Negative findings are findings too."</i>
 </div>
